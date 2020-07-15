@@ -1,46 +1,33 @@
-#include "checkable.h"
-#include <QMenu>
-#include <QMenuBar>
-#include <QStatusBar>
+#include "toolbar.h"
+#include <QToolBar>
+#include <QIcon>
+#include <QAction>
 
-Checkable::Checkable(QWidget *parent)
+Toolbar::Toolbar(QWidget *parent)
     : QMainWindow(parent) {
 
-  // Создаём действие (пункт) "View statusbar" в меню
-  viewst = new QAction("&View statusbar", this);
+  QPixmap newpix("cursor.png");
+  QPixmap openpix("shopping-cart.png");
+  QPixmap quitpix("key.png");
 
-  // Делаем так, чтобы этот пункт меню можно было отметить галочкой
-  viewst->setCheckable(true);
+  // Устанавливаем указатель на созданную панель инструментов
+  QToolBar *toolbar = addToolBar("main toolbar");
 
-  // Делаем этот пункт меню отмеченным галочкой по умолчанию
-  viewst->setChecked(true);
+  toolbar->addAction(QIcon(newpix), "New File"); // добавляем действие "New File" на панель инструментов
+  toolbar->addAction(QIcon(openpix), "Open File"); // добавляем действие "Open File" на панель инструментов
+  toolbar->addSeparator(); // добавляем разделитель на панель инструментов
+  QAction *quit = toolbar->addAction(QIcon(quitpix), "Quit Application"); // добавляем действие "Quit" на панель инструментов
 
-  QMenu *file;
-  file = menuBar()->addMenu("&File");
-  file->addAction(viewst);
-
-  statusBar();
-
-  connect(viewst, &QAction::triggered, this, &Checkable::toggleStatusbar);
-}
-
-void Checkable::toggleStatusbar() {
-
-  // Определяем, установлен ли флажок для элемента меню, и, исходя из этого, скрываем или показываем строку состояния
-  if (viewst->isChecked()) {
-      statusBar()->show();
-  } else {
-      statusBar()->hide();
-  }
+  connect(quit, &QAction::triggered, qApp, &QApplication::quit);
 }
 int main(int argc, char *argv[]) {
 
   QApplication app(argc, argv);
 
-  Checkable window;
+  Toolbar window;
 
-  window.resize(250, 150);
-  window.setWindowTitle("Checkable menu");
+  window.resize(300, 200);
+  window.setWindowTitle("QToolBar");
   window.show();
 
   return app.exec();

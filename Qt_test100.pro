@@ -21,7 +21,6 @@ SOURCES += \
 
 HEADERS += \
     anothermenu.h \
-    checkable.h \
     mainwindow.h \
     simplemenu.h \
     toolbar.h
