@@ -1,30 +1,44 @@
-#include <QApplication>
-#include <QWidget>
-#include <QPushButton>
+#include "plusminus.h"
+#include <QGridLayout>
 
-class MyButton : public QWidget {
-
- public:
-     MyButton(QWidget *parent = 0);
-};
-
-MyButton::MyButton(QWidget *parent)
+PlusMinus::PlusMinus(QWidget *parent)
     : QWidget(parent) {
 
-  QPushButton *quitBtn = new QPushButton("Quit", this); // создаём новую кнопку
-  quitBtn->setGeometry(50, 40, 75, 30); // изменяем размеры кнопки и помещаем на форму окна
+  QPushButton *plsBtn = new QPushButton("+", this);
+  QPushButton *minBtn = new QPushButton("-", this);
+  lbl = new QLabel("0", this);
 
-  connect(quitBtn, &QPushButton::clicked, qApp, &QApplication::quit);
+  QGridLayout *grid = new QGridLayout(this);
+  grid->addWidget(plsBtn, 0, 0);
+  grid->addWidget(minBtn, 0, 1);
+  grid->addWidget(lbl, 1, 1);
+
+  setLayout(grid);
+
+  connect(plsBtn, &QPushButton::clicked, this, &PlusMinus::OnPlus);
+  connect(minBtn, &QPushButton::clicked, this, &PlusMinus::OnMinus);
 }
 
-int main(int argc, char *argv[]) {
+void PlusMinus::OnPlus() {
 
+  int val = lbl->text().toInt();
+  val++;
+  lbl->setText(QString::number(val));
+}
+
+void PlusMinus::OnMinus() {
+
+  int val = lbl->text().toInt();
+  val--;
+  lbl->setText(QString::number(val));
+}
+int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
 
-  MyButton window;
+  PlusMinus window;
 
-  window.resize(250, 150);
-  window.setWindowTitle("QPushButton");
+  window.resize(300, 190);
+  window.setWindowTitle("Plus minus");
   window.show();
 
   return app.exec();
