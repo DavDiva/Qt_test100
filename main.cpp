@@ -1,44 +1,31 @@
-#include "plusminus.h"
-#include <QGridLayout>
+#include "simplemenu.h"
+#include <QMenu>
+#include <QMenuBar>
 
-PlusMinus::PlusMinus(QWidget *parent)
-    : QWidget(parent) {
+SimpleMenu::SimpleMenu(QWidget *parent)
+    : QMainWindow(parent) {
 
-  QPushButton *plsBtn = new QPushButton("+", this);
-  QPushButton *minBtn = new QPushButton("-", this);
-  lbl = new QLabel("0", this);
+  // Создаём объект класса QAction (действие) с названием пункта меню "Quit"
+  QAction *quit = new QAction("&Quit", this);
 
-  QGridLayout *grid = new QGridLayout(this);
-  grid->addWidget(plsBtn, 0, 0);
-  grid->addWidget(minBtn, 0, 1);
-  grid->addWidget(lbl, 1, 1);
+  // Создаём объект класса QMenu (меню)
+  QMenu *file;
+  file = menuBar()->addMenu("&File");
 
-  setLayout(grid);
+  // Помещаем действие "Quit" (Выход) в меню с помощью метода addAction()
+  file->addAction(quit);
 
-  connect(plsBtn, &QPushButton::clicked, this, &PlusMinus::OnPlus);
-  connect(minBtn, &QPushButton::clicked, this, &PlusMinus::OnMinus);
-}
-
-void PlusMinus::OnPlus() {
-
-  int val = lbl->text().toInt();
-  val++;
-  lbl->setText(QString::number(val));
-}
-
-void PlusMinus::OnMinus() {
-
-  int val = lbl->text().toInt();
-  val--;
-  lbl->setText(QString::number(val));
+  // Когда мы выбираем в меню опцию "Quit", то приложение сразу же завершает своё выполнение
+  connect(quit, &QAction::triggered, qApp, QApplication::quit);
 }
 int main(int argc, char *argv[]) {
+
   QApplication app(argc, argv);
 
-  PlusMinus window;
+  SimpleMenu window;
 
-  window.resize(300, 190);
-  window.setWindowTitle("Plus minus");
+  window.resize(250, 150);
+  window.setWindowTitle("Simple menu");
   window.show();
 
   return app.exec();

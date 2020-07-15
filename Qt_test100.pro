@@ -21,7 +21,7 @@ SOURCES += \
 
 HEADERS += \
     mainwindow.h \
-    plusminus.h
+    simplemenu.h
 
 FORMS += \
     mainwindow.ui
