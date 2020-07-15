@@ -1,33 +1,48 @@
-#include "toolbar.h"
+#include "skeleton.h"
 #include <QToolBar>
 #include <QIcon>
 #include <QAction>
+#include <QMenu>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QTextEdit>
 
-Toolbar::Toolbar(QWidget *parent)
+Skeleton::Skeleton(QWidget *parent)
     : QMainWindow(parent) {
 
   QPixmap newpix("cursor.png");
   QPixmap openpix("shopping-cart.png");
   QPixmap quitpix("key.png");
 
-  // Устанавливаем указатель на созданную панель инструментов
-  QToolBar *toolbar = addToolBar("main toolbar");
+  QAction *quit = new QAction("&Quit", this);
 
-  toolbar->addAction(QIcon(newpix), "New File"); // добавляем действие "New File" на панель инструментов
-  toolbar->addAction(QIcon(openpix), "Open File"); // добавляем действие "Open File" на панель инструментов
-  toolbar->addSeparator(); // добавляем разделитель на панель инструментов
-  QAction *quit = toolbar->addAction(QIcon(quitpix), "Quit Application"); // добавляем действие "Quit" на панель инструментов
+  QMenu *file;
+  file = menuBar()->addMenu("&File");
+  file->addAction(quit);
 
   connect(quit, &QAction::triggered, qApp, &QApplication::quit);
+
+  QToolBar *toolbar = addToolBar("main toolbar");
+  toolbar->addAction(QIcon(newpix), "New File");
+  toolbar->addAction(QIcon(openpix), "Open File");
+  toolbar->addSeparator();
+
+  QAction *quit2 = toolbar->addAction(QIcon(quitpix), "Quit Application");
+  connect(quit2, &QAction::triggered, qApp, &QApplication::quit);
+
+  QTextEdit *edit = new QTextEdit(this); // создаём виджет QTextEdit
+  setCentralWidget(edit); // помещаем созданный виджет в центр виджета QMainWindow
+
+  statusBar()->showMessage("Ready"); // показываем в нижней панели приложения сообщение "Ready"
 }
 int main(int argc, char *argv[]) {
 
   QApplication app(argc, argv);
 
-  Toolbar window;
+  Skeleton window;
 
-  window.resize(300, 200);
-  window.setWindowTitle("QToolBar");
+  window.resize(350, 250);
+  window.setWindowTitle("Application skeleton");
   window.show();
 
   return app.exec();

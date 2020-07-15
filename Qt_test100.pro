@@ -23,6 +23,7 @@ HEADERS += \
     anothermenu.h \
     mainwindow.h \
     simplemenu.h \
+    skeleton.h \
     toolbar.h
 
 FORMS += \
