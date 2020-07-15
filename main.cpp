@@ -1,43 +1,46 @@
-#include "anothermenu.h"
+#include "checkable.h"
 #include <QMenu>
 #include <QMenuBar>
+#include <QStatusBar>
 
-AnotherMenu::AnotherMenu(QWidget *parent)
+Checkable::Checkable(QWidget *parent)
     : QMainWindow(parent) {
 
-  // Изображения ниже мы будем использовать в качестве иконок в нашем меню
-  QPixmap newpix("cursor.png");
-  QPixmap openpix("shopping-cart.png");
-  QPixmap quitpix("key.png");
+  // Создаём действие (пункт) "View statusbar" в меню
+  viewst = new QAction("&View statusbar", this);
 
-  // Здесь в качестве первых аргументов мы используем конструкторы класса QAction
-  QAction *newa = new QAction(newpix, "&New", this);
-  QAction *open = new QAction(openpix, "&Open", this);
-  QAction *quit = new QAction(quitpix, "&Quit", this);
+  // Делаем так, чтобы этот пункт меню можно было отметить галочкой
+  viewst->setCheckable(true);
 
-  // А здесь мы задаём сочетание горячих клавиш CTRL+Q, которое будет выполнять действие Quit (Выход)
-  quit->setShortcut(tr("CTRL+Q"));
+  // Делаем этот пункт меню отмеченным галочкой по умолчанию
+  viewst->setChecked(true);
 
   QMenu *file;
   file = menuBar()->addMenu("&File");
-  file->addAction(newa); // добавляем действие "New"
-  file->addAction(open); // добавляем действие "Open"
-  file->addSeparator();  // устанавливаем разделитель
-  file->addAction(quit); // добавляем действие "Quit"
+  file->addAction(viewst);
 
-  // В некоторых средах значки меню по умолчанию не отображаются, поэтому мы можем попробовать отключить атрибут Qt::AA_DontShowIconsInMenus
-  qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
+  statusBar();
 
-  connect(quit, &QAction::triggered, qApp, &QApplication::quit);
+  connect(viewst, &QAction::triggered, this, &Checkable::toggleStatusbar);
+}
+
+void Checkable::toggleStatusbar() {
+
+  // Определяем, установлен ли флажок для элемента меню, и, исходя из этого, скрываем или показываем строку состояния
+  if (viewst->isChecked()) {
+      statusBar()->show();
+  } else {
+      statusBar()->hide();
+  }
 }
 int main(int argc, char *argv[]) {
 
   QApplication app(argc, argv);
 
-  AnotherMenu window;
+  Checkable window;
 
-  window.resize(350, 200);
-  window.setWindowTitle("Another menu");
+  window.resize(250, 150);
+  window.setWindowTitle("Checkable menu");
   window.show();
 
   return app.exec();
