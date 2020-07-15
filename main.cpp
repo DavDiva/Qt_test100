@@ -1,31 +1,43 @@
-#include "simplemenu.h"
+#include "anothermenu.h"
 #include <QMenu>
 #include <QMenuBar>
 
-SimpleMenu::SimpleMenu(QWidget *parent)
+AnotherMenu::AnotherMenu(QWidget *parent)
     : QMainWindow(parent) {
 
-  // Создаём объект класса QAction (действие) с названием пункта меню "Quit"
-  QAction *quit = new QAction("&Quit", this);
+  // Изображения ниже мы будем использовать в качестве иконок в нашем меню
+  QPixmap newpix("cursor.png");
+  QPixmap openpix("shopping-cart.png");
+  QPixmap quitpix("key.png");
 
-  // Создаём объект класса QMenu (меню)
+  // Здесь в качестве первых аргументов мы используем конструкторы класса QAction
+  QAction *newa = new QAction(newpix, "&New", this);
+  QAction *open = new QAction(openpix, "&Open", this);
+  QAction *quit = new QAction(quitpix, "&Quit", this);
+
+  // А здесь мы задаём сочетание горячих клавиш CTRL+Q, которое будет выполнять действие Quit (Выход)
+  quit->setShortcut(tr("CTRL+Q"));
+
   QMenu *file;
   file = menuBar()->addMenu("&File");
+  file->addAction(newa); // добавляем действие "New"
+  file->addAction(open); // добавляем действие "Open"
+  file->addSeparator();  // устанавливаем разделитель
+  file->addAction(quit); // добавляем действие "Quit"
 
-  // Помещаем действие "Quit" (Выход) в меню с помощью метода addAction()
-  file->addAction(quit);
+  // В некоторых средах значки меню по умолчанию не отображаются, поэтому мы можем попробовать отключить атрибут Qt::AA_DontShowIconsInMenus
+  qApp->setAttribute(Qt::AA_DontShowIconsInMenus, false);
 
-  // Когда мы выбираем в меню опцию "Quit", то приложение сразу же завершает своё выполнение
-  connect(quit, &QAction::triggered, qApp, QApplication::quit);
+  connect(quit, &QAction::triggered, qApp, &QApplication::quit);
 }
 int main(int argc, char *argv[]) {
 
   QApplication app(argc, argv);
 
-  SimpleMenu window;
+  AnotherMenu window;
 
-  window.resize(250, 150);
-  window.setWindowTitle("Simple menu");
+  window.resize(350, 200);
+  window.setWindowTitle("Another menu");
   window.show();
 
   return app.exec();

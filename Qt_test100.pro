@@ -20,6 +20,7 @@ SOURCES += \
     mainwindow.cpp
 
 HEADERS += \
+    anothermenu.h \
     mainwindow.h \
     simplemenu.h
 
